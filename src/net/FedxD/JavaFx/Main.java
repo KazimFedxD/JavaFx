@@ -48,12 +48,12 @@ class Main {
     private static void run(String code, String filepath) {
         System.out.println("Running code: " + code);
         Lexer lexer = new Lexer(code);
-        Result LexerResult = lexer.makeTokens();
-        if (LexerResult.error != null) {
-            System.out.println(LexerResult.error);
+        LexerResult lexerResult = lexer.makeTokens();
+        if (lexerResult.error != null) {
+            System.out.println(lexerResult.error);
             return;
         }
-        ArrayList<Token> tokens = LexerResult.tokens;
+        ArrayList<Token> tokens = lexerResult.tokens;
         System.out.println("[");
         tokens.forEach(token -> {
             System.out.println("\t" + token);

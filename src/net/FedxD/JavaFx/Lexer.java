@@ -3,15 +3,15 @@ package net.FedxD.JavaFx;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-class Result {
+class LexerResult {
     public ArrayList<Token> tokens;
     public Exceptions error;
 
-    public Result(ArrayList<Token> tokens) {
+    public LexerResult(ArrayList<Token> tokens) {
         this.tokens = tokens;
     }
 
-    public Result(Exceptions error) {
+    public LexerResult(Exceptions error) {
         this.error = error;
     }
 }
@@ -81,7 +81,7 @@ public class Lexer {
         }
     }
 
-    public Result makeTokens() {
+    public LexerResult makeTokens() {
         ArrayList<Token> tokens = new ArrayList<Token>();
 
         while (this.currentChar != '\0') {
@@ -121,12 +121,12 @@ public class Lexer {
                 Position pos_start = this.pos.copy();
                 char currentChar = this.currentChar;
                 this.advance();
-                return new Result(new IllegalCharException(pos_start, this.pos, "'" + currentChar + "'"));
+                return new LexerResult(new IllegalCharException(pos_start, this.pos, "'" + currentChar + "'"));
             }
         }
 
 
-        return new Result(tokens);
+        return new LexerResult(tokens);
     }
 
     private Token makeNumber() {
