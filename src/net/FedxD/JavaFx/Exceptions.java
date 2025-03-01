@@ -48,3 +48,31 @@ class ExpectedCharException extends Exceptions {
         super(pos_start, pos_end, "Expected Character", details);
     }
 }
+
+class RunTimeError extends Exceptions {
+    public Context context;
+
+    public RunTimeError(Position pos_start, Position pos_end, String details, Context context) {
+        super(pos_start, pos_end, "Runtime Error", details);
+        System.out.println(pos_start);
+        this.context = context;
+    }
+
+    public String toString() {
+        String result = this.generateTraceback();
+        result += super.toString();
+        return result;
+    }
+
+    public String generateTraceback() {
+        String result = "";
+        Position pos = this.pos_start.copy();
+        Context ctx = this.context;
+        while (ctx != null) {
+            result = String.format("\nFile %s, line %s, in %s\n", pos.fileName, pos.ln + 1, ctx.displayName) + result;
+            pos = ctx.parentEntryPos;
+            ctx = ctx.parent;
+        }
+        return "Traceback (most recent call last):" + result;
+    }
+}

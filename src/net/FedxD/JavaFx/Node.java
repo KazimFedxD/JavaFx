@@ -19,7 +19,20 @@ class NumberNode extends Node {
     }
 
     public String toString() {
-        return token.toString();
+        return String.format("(%s)", token);
+    }
+}
+
+class FloatNode extends Node {
+    public Token token;
+
+    public FloatNode(Token token) {
+        super(token.pos_start, token.pos_end);
+        this.token = token;
+    }
+
+    public String toString() {
+        return String.format("(%s)", token);
     }
 }
 

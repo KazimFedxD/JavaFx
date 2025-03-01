@@ -35,6 +35,18 @@ class Token {
         this.pos_end = pos_start.copy();
     }
 
+    public Token(String type){
+        this.type = type;
+    }
+
+    public Token(String type, String value){
+        this.type = type;
+        this.value = value;
+    }
+
+    public boolean matches(String type, String value) {
+        return this.type == type && this.value == value;
+    }
 
     public String toString() {
         if (this.value != null) {
@@ -66,9 +78,9 @@ public class Lexer {
     };
 
 
-    public Lexer(String text) {
+    public Lexer(String text, String filename) {
         this.text = text;
-        this.pos = new Position(-1, 0, -1, "", this.text);
+        this.pos = new Position(-1, 0, -1, filename, this.text);
         this.advance();
     }
 
@@ -86,7 +98,7 @@ public class Lexer {
 
         while (this.currentChar != '\0') {
             if (this.currentChar == ' ' || this.currentChar == '\t') {
-                tokens.add(new Token("INDENT", this.pos));
+                //tokens.add(new Token("INDENT", this.pos));
                 this.advance();
             } else if (this.currentChar == '\n' || this.currentChar == ';'){
                 tokens.add(new Token("NEWLINE", this.pos));
@@ -117,6 +129,9 @@ public class Lexer {
             } else if (this.currentChar == ')') {
                 tokens.add(new Token("RPAREN", this.pos));
                 this.advance();
+            } else if (this.currentChar == '^') {
+                tokens.add(new Token("POW", this.pos));
+                this.advance();
             } else {
                 Position pos_start = this.pos.copy();
                 char currentChar = this.currentChar;
@@ -124,7 +139,7 @@ public class Lexer {
                 return new LexerResult(new IllegalCharException(pos_start, this.pos, "'" + currentChar + "'"));
             }
         }
-
+        tokens.add(new Token("EOF", this.pos));
 
         return new LexerResult(tokens);
     }

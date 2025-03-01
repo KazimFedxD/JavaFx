@@ -39,7 +39,7 @@ class Main {
                 if (code.equals("exit()")) {
                     break;
                 }
-                Main.run(code, filepath);
+                Main.run(code, "<stdin>");
 
             }
 
@@ -47,17 +47,29 @@ class Main {
     }
     private static void run(String code, String filepath) {
         System.out.println("Running code: " + code);
-        Lexer lexer = new Lexer(code);
+        Lexer lexer = new Lexer(code, filepath);
         LexerResult lexerResult = lexer.makeTokens();
         if (lexerResult.error != null) {
             System.out.println(lexerResult.error);
             return;
         }
         ArrayList<Token> tokens = lexerResult.tokens;
-        System.out.println("[");
-        tokens.forEach(token -> {
-            System.out.println("\t" + token);
-        });
-        System.out.println("]");
+
+        Parser parser = new Parser(tokens);
+        ParseResult parseResult = parser.parse();
+        if (parseResult.error != null) {
+            System.out.println(parseResult.error);
+            return;
+        }
+
+        Context context = new Context("<program>");
+        Interpreter interpreter = new Interpreter(context);
+        RunTimeResult runTimeResult = interpreter.visit(parseResult.node);
+        if (runTimeResult.error != null) {
+            System.out.println(runTimeResult.error);
+            return;
+        }
+        System.out.println(runTimeResult.value);
+
     }
 }
